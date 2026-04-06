@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import { getFlags, createFlag, toggleFlag } from "./api"
+import Login from "./Login"
 
 function App() {
   const [flags, setFlags] = useState([])
@@ -7,56 +8,70 @@ function App() {
   const [rollout, setRollout] = useState(0)
   const [token, setToken] = useState("")
 
-  // 🔥 Ask for token ONLY once
+  
+  // ✅ Get token from localStorage
   useEffect(() => {
     const savedToken = localStorage.getItem("token")
-
-    if (savedToken) {
-      setToken(savedToken)
-    } else {
-      const input = prompt("Enter your token")
-      if (input) {
-        localStorage.setItem("token", input)
-        setToken(input)
-      }
-    }
+    if (savedToken) setToken(savedToken)
   }, [])
 
   const loadFlags = async () => {
-    const data = await getFlags(token)
-    setFlags(data)
+    try {
+      const data = await getFlags(token)
+
+      if (Array.isArray(data)) {
+        setFlags(data)
+      } else {
+        console.error("Invalid response:", data)
+        setFlags([])
+      }
+    } catch (err) {
+      console.error(err)
+      setFlags([])
+    }
   }
 
-  // 🔥 Load flags only after token is ready
+  // ✅ Load flags only when token exists
   useEffect(() => {
     if (token) {
       loadFlags()
     }
-    // eslint-disable-next-line
   }, [token])
 
   const handleCreate = async () => {
-  if (!name || !token) return
+    if (!name || !token) return
 
-  const res = await createFlag(token, { name, rollout })
-  console.log("CREATE RESPONSE:", res)
+    const res = await createFlag(token, { name, rollout })
+    console.log("CREATE RESPONSE:", res)
 
-  setName("")
-  setRollout(0)
+    setName("")
+    setRollout(0)
 
-  await loadFlags()
-}
+    await loadFlags()
+  }
 
   const handleToggle = async (flagName) => {
     await toggleFlag(token, flagName)
     loadFlags()
   }
 
+  const handleLogout = () => {
+  localStorage.removeItem("token")
+  setToken("")
+}
+
+  // 🔐 IMPORTANT: show login if no token
+  if (!token) {
+    return <Login setToken={setToken} />
+  }
+
   return (
     <div style={{ padding: 20 }}>
-      <h1>Feature Flag Dashboard</h1>
+      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+  <h1>Feature Flag Dashboard</h1>
+  <button onClick={handleLogout}>Logout</button>
+</div>
 
-      {/* CREATE FLAG */}
       <h3>Create Flag</h3>
       <input
         placeholder="Flag name"
@@ -73,9 +88,8 @@ function App() {
 
       <button onClick={handleCreate}>Create</button>
 
-      {/* SHOW FLAGS */}
       <h3>Flags</h3>
-      {flags.map((flag) => (
+      {Array.isArray(flags) && flags.map((flag) => (
         <div key={flag.id} style={{ marginBottom: 10 }}>
           <strong>{flag.name}</strong> — {flag.rollout}% —{" "}
           {flag.isActive ? "ON" : "OFF"}
