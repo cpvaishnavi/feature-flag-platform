@@ -36,6 +36,7 @@ function App() {
     if (token) {
       loadFlags()
     }
+    // eslint-disable-next-line
   }, [token])
 
   const handleCreate = async () => {
