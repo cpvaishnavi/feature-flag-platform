@@ -16,7 +16,9 @@ function Login({ setToken }) {
   } else {
     const res = await loginUser({ email, password })
 
-    if (res.token) {
+console.log("LOGIN RESPONSE:", res)
+
+if (res.token) {
       localStorage.setItem("token", res.token)
       setToken(res.token)
 
