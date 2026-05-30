@@ -11,7 +11,8 @@ function App() {
   const [rollout, setRollout] = useState(0)
   const [token, setToken] = useState("")
   const [page, setPage] = useState("dashboard")
-
+  const [selectedProjectId, setSelectedProjectId] =
+  useState(null)
   
   // ✅ Get token from localStorage
   useEffect(() => {
@@ -25,7 +26,10 @@ function App() {
   const loadFlags = async () => {
     try {
       const data = await getFlags(token)
-console.log("FLAGS FROM API:", data)
+console.log(
+  "FLAGS FROM API:",
+  JSON.stringify(data, null, 2)
+)
 
       if (Array.isArray(data)) {
         setFlags(data)
@@ -48,9 +52,21 @@ console.log("FLAGS FROM API:", data)
   }, [token])
 
   const handleCreate = async () => {
-    if (!name || !token) return
-
-    const res = await createFlag(token, { name, rollout })
+    if (
+  !name ||
+  !token ||
+  !selectedProjectId
+)
+  return
+    console.log(
+  "Creating feature with project:",
+  selectedProjectId
+)
+    const res = await createFlag(token, {
+      name,
+      rollout,
+      projectId: selectedProjectId
+    })
     console.log("CREATE RESPONSE:", res)
 
     setName("")
@@ -77,9 +93,11 @@ console.log("FLAGS FROM API:", data)
   if (page === "projects") {
   return (
   <Projects
-    page={page}
-    setPage={setPage}
-  />
+  page={page}
+  setPage={setPage}
+  selectedProjectId={selectedProjectId}
+  setSelectedProjectId={setSelectedProjectId}
+/>
 )
 }
 
@@ -95,6 +113,7 @@ return (
     handleToggle={handleToggle}
     page={page}
     setPage={setPage}
+    selectedProjectId={selectedProjectId}
   />
 )
 }

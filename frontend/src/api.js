@@ -1,4 +1,4 @@
-const BASE_URL = "https://feature-flag-platform.onrender.com"
+const BASE_URL = "http://localhost:3000"
 
 export const getFlags = async (token) => {
   const res = await fetch(`${BASE_URL}/flags`, {
@@ -51,6 +51,29 @@ export const signupUser = async (data) => {
     },
     body: JSON.stringify(data)
   })
+
+  return res.json()
+}
+
+export const getProjects = async () => {
+  const res = await fetch(
+    `${BASE_URL}/projects`
+  )
+
+  return res.json()
+}
+
+export const createProject = async (data) => {
+  const res = await fetch(
+    `${BASE_URL}/projects`,
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    }
+  )
 
   return res.json()
 }

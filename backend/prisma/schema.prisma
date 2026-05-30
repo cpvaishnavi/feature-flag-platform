@@ -14,15 +14,26 @@ model User {
   role      String   @default("user")
   createdAt DateTime @default(now())
 }
+model Project {
+  id        Int      @id @default(autoincrement())
+  name      String
+  createdAt DateTime @default(now())
 
+  flags     FeatureFlag[]
+}
 model FeatureFlag {
   id          Int      @id @default(autoincrement())
   name        String   @unique
   description String?
   createdBy   Int
+
+  projectId Int?
+  project   Project? @relation(fields: [projectId], references: [id])
+  
   rollout     Int      @default(0)
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
+  
 }
 
 model FlagRule {

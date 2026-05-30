@@ -2,14 +2,20 @@ const prisma = require("../prisma")
 
 exports.createFlag = async (req, res) => {
   try {
-    const { name, description, rollout } = req.body
+    const {
+  name,
+  description,
+  rollout,
+  projectId
+} = req.body
 
     const flag = await prisma.featureFlag.create({
   data: {
     name,
     description,
     rollout: rollout || 0,
-    createdBy: req.user.userId
+    createdBy: req.user.userId,
+    projectId
   }
 })
 
@@ -22,10 +28,18 @@ exports.createFlag = async (req, res) => {
 
 exports.getFlags = async (req, res) => {
   try {
-    const flags = await prisma.featureFlag.findMany()
+    const flags =
+      await prisma.featureFlag.findMany({
+        include: {
+          project: true
+        }
+      })
+
     res.json(flags)
   } catch (error) {
-    res.status(500).json({ message: "Error fetching flags" })
+    res.status(500).json({
+      message: "Error fetching flags"
+    })
   }
 }
 

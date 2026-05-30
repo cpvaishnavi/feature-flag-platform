@@ -12,7 +12,8 @@ function Dashboard({
   handleCreate,
   handleToggle,
   page,
-  setPage
+  setPage,
+  selectedProjectId
 }) {
   return (
     <div
@@ -169,6 +170,17 @@ function Dashboard({
               >
                 <div>
                   <strong>{flag.name}</strong>
+                  <div
+  style={{
+    fontSize: "13px",
+    color: "#6b7280",
+    marginTop: "4px"
+  }}
+>
+  Project:
+  {" "}
+  {flag.project?.name || "None"}
+</div>
 
                   <div style={{ marginTop: "8px" }}>
   <div

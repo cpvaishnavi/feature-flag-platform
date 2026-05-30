@@ -1,24 +1,47 @@
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Sidebar from "../components/Sidebar"
+
+import {
+  getProjects,
+  createProject,
+  getFlags
+} from "../api"
 
 function Projects({
   page,
-  setPage
+  setPage,
+  selectedProjectId,
+  setSelectedProjectId
 }) {
   const [projectName, setProjectName] = useState("")
 
-  const [projects, setProjects] = useState([
-    {
-      id: 1,
-      name: "Netflix",
-      features: 3
-    },
-    {
-      id: 2,
-      name: "Spotify",
-      features: 5
-    }
-  ])
+  const [projects, setProjects] = useState([])
+
+  const [flags, setFlags] = useState([])
+
+  const [selectedProject, setSelectedProject] =
+  useState(null)
+
+  useEffect(() => {
+  loadProjects()
+  loadFlags()
+}, [])
+
+const loadProjects = async () => {
+  const data = await getProjects()
+
+  setProjects(data)
+}
+
+const loadFlags = async () => {
+  const token =
+    localStorage.getItem("token")
+
+  const data =
+    await getFlags(token)
+
+  setFlags(data)
+}
 
   return (
     <div
@@ -74,22 +97,17 @@ function Projects({
             />
 
             <button
-              onClick={() => {
-                if (!projectName) return
+              onClick={async () => {
+  if (!projectName) return
 
-                const newProject = {
-                  id: Date.now(),
-                  name: projectName,
-                  features: 0
-                }
+  await createProject({
+    name: projectName
+  })
 
-                setProjects([
-                  ...projects,
-                  newProject
-                ])
+  setProjectName("")
 
-                setProjectName("")
-              }}
+  await loadProjects()
+}}
               style={{
                 background: "#2563eb",
                 color: "white",
@@ -116,14 +134,27 @@ function Projects({
           <h2>Projects</h2>
 
           {projects.map((project) => (
-            <div
-              key={project.id}
+  <div
+    key={project.id}
+    onClick={() => {
+  setSelectedProject(project)
+  setSelectedProjectId(project.id)
+}}
               style={{
                 marginTop: "15px",
                 padding: "15px",
-                border: "1px solid #eee",
-                borderRadius: "10px"
+                border:
+                  selectedProject?.id === project.id
+                  ? "2px solid #2563eb"
+                  : "1px solid #eee",
+                background:
+                  selectedProject?.id === project.id
+                  ? "#eff6ff"
+                  : "white",
+                borderRadius: "10px",
+                cursor: "pointer"
               }}
+              
             >
               <h3>{project.name}</h3>
 
@@ -137,6 +168,61 @@ function Projects({
             </div>
           ))}
         </div>
+        {selectedProject && (
+  <div
+    style={{
+      background: "white",
+      padding: "20px",
+      borderRadius: "12px",
+      marginTop: "30px"
+    }}
+  >
+    <h2>
+      Selected Project: {selectedProject.name}
+    </h2>
+    <p>
+      Project ID: {selectedProject.id}
+    </p>
+    <p>
+      Global Selected Project ID:
+      {" "}
+      {selectedProjectId}
+    </p>
+    <h3>Feature Flags</h3>
+
+<div
+  style={{
+    marginTop: "20px"
+  }}
+>
+  <div
+  style={{
+    marginTop: "20px"
+  }}
+>
+  {flags
+  .filter(
+    (flag) =>
+      flag.projectId ===
+      selectedProject?.id
+  )
+  .map((flag) => (
+    <div
+      key={flag.id}
+      style={{
+        padding: "12px",
+        border: "1px solid #eee",
+        borderRadius: "8px",
+        marginBottom: "10px"
+      }}
+    >
+      {flag.name}
+    </div>
+  ))}
+</div>
+</div>
+  </div>
+)}
       </div>
     </div>
   )
