@@ -28,21 +28,19 @@ exports.createFlag = async (req, res) => {
 
 exports.getFlags = async (req, res) => {
   try {
-    const flags =
-      await prisma.featureFlag.findMany({
-        include: {
-          project: true
-        }
-      })
+    const flags = await prisma.featureFlag.findMany({
+      include: {
+        project: true
+      }
+    })
 
     res.json(flags)
- } catch (error) {
-  console.error(error)
+  } catch (error) {
+    console.error(error)
 
-  res.status(500).json({
-    message: error.message
-  })
-}
+    res.status(500).json({
+      message: error.message
+    })
   }
 }
 
