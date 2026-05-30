@@ -36,10 +36,13 @@ exports.getFlags = async (req, res) => {
       })
 
     res.json(flags)
-  } catch (error) {
-    res.status(500).json({
-      message: "Error fetching flags"
-    })
+ } catch (error) {
+  console.error(error)
+
+  res.status(500).json({
+    message: error.message
+  })
+}
   }
 }
 
