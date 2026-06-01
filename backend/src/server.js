@@ -8,6 +8,9 @@ const flagRoutes = require("./routes/flagRoutes")
 const projectRoutes = require("./routes/projectRoutes")
 const app = express()
 
+const environmentRoutes =
+  require("./routes/environmentRoutes")
+
 app.use(cors())
 app.use(express.json())
 
@@ -16,6 +19,11 @@ app.use("/auth", authRoutes)
 app.use("/flags", flagRoutes)
 
 app.use("/projects", projectRoutes)
+app.use(
+  "/environments",
+  environmentRoutes
+)
+
 
 app.get("/", (req, res) => {
   console.log("Request received")

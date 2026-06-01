@@ -17,9 +17,11 @@ model User {
 model Project {
   id        Int      @id @default(autoincrement())
   name      String
+  ownerId   Int?
   createdAt DateTime @default(now())
 
   flags     FeatureFlag[]
+  environments Environment[]
 }
 model FeatureFlag {
   id          Int      @id @default(autoincrement())
@@ -33,6 +35,9 @@ model FeatureFlag {
   rollout     Int      @default(0)
   isActive    Boolean  @default(true)
   createdAt   DateTime @default(now())
+
+  environmentId Int?
+environment   Environment? @relation(fields: [environmentId], references: [id])
   
 }
 
@@ -49,4 +54,15 @@ model AuditLog {
   action    String
   userId    Int
   timestamp DateTime @default(now())
+}
+
+model Environment {
+  id        Int      @id @default(autoincrement())
+  name      String
+
+  projectId Int
+  project   Project @relation(fields: [projectId], references: [id])
+
+  createdAt DateTime @default(now())
+  flags FeatureFlag[]
 }

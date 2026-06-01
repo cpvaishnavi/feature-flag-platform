@@ -4,7 +4,9 @@ import Sidebar from "../components/Sidebar"
 import {
   getProjects,
   createProject,
-  getFlags
+  getFlags,
+  getEnvironments,
+  createEnvironment
 } from "../api"
 
 function Projects({
@@ -22,15 +24,29 @@ function Projects({
   const [selectedProject, setSelectedProject] =
   useState(null)
 
+  const [environmentName, setEnvironmentName] = useState("")
+const [environments, setEnvironments] = useState([])
+
   useEffect(() => {
   loadProjects()
   loadFlags()
+  loadEnvironments()
 }, [])
 
 const loadProjects = async () => {
-  const data = await getProjects()
+  const token =
+  localStorage.getItem("token")
+
+const data =
+  await getProjects(token)
 
   setProjects(data)
+}
+
+const loadEnvironments = async () => {
+  const data = await getEnvironments()
+
+  setEnvironments(data)
 }
 
 const loadFlags = async () => {
@@ -94,20 +110,27 @@ const loadFlags = async () => {
                 border: "1px solid #d1d5db",
                 minWidth: "250px"
               }}
+
             />
 
             <button
-              onClick={async () => {
-  if (!projectName) return
+  onClick={async () => {
+    if (!projectName) return
 
-  await createProject({
-    name: projectName
-  })
+    const token =
+      localStorage.getItem("token")
 
-  setProjectName("")
+    await createProject(
+      token,
+      {
+        name: projectName
+      }
+    )
 
-  await loadProjects()
-}}
+    setProjectName("")
+
+    await loadProjects()
+  }}
               style={{
                 background: "#2563eb",
                 color: "white",
@@ -120,6 +143,58 @@ const loadFlags = async () => {
               Create Project
             </button>
           </div>
+          <h2>Create Environment</h2>
+
+<div
+  style={{
+    display: "flex",
+    gap: "10px",
+    marginTop: "20px"
+  }}
+>
+  <input
+    placeholder="Environment Name"
+    value={environmentName}
+    onChange={(e) =>
+      setEnvironmentName(
+        e.target.value
+      )
+    }
+    style={{
+      padding: "10px",
+      borderRadius: "8px",
+      border: "1px solid #d1d5db",
+      minWidth: "250px"
+    }}
+  />
+
+  <button
+    onClick={async () => {
+  alert(
+    `Project: ${selectedProject?.name}
+Environment: ${environmentName}`
+  )
+
+  if (
+    !selectedProject ||
+    !environmentName
+  )
+    return
+
+  await createEnvironment({
+    name: environmentName,
+    projectId:
+      selectedProject.id
+  })
+
+  setEnvironmentName("")
+
+  loadEnvironments()
+}}
+  >
+    Create Environment
+  </button>
+</div>
         </div>
 
         {/* Projects List */}
@@ -156,15 +231,51 @@ const loadFlags = async () => {
               }}
               
             >
-              <h3>{project.name}</h3>
+              <h3
+  style={{
+    marginBottom: "10px"
+  }}
+>
+  {project.name}
+</h3>
 
-              <p>
-                {project.features} Feature Flags
-              </p>
+             <p>
+  {
+    flags.filter(
+      (flag) =>
+        flag.projectId === project.id
+    ).length
+  } Feature Flags
+</p>
 
-              <p>
-                Development • Staging • Production
-              </p>
+              <div
+  style={{
+    display: "flex",
+    gap: "8px",
+    marginTop: "10px",
+    flexWrap: "wrap"
+  }}
+>
+  {environments
+    .filter(
+      (env) =>
+        env.projectId === project.id
+    )
+    .map((env) => (
+      <span
+        key={env.id}
+        style={{
+          background: "#e0e7ff",
+          color: "#3730a3",
+          padding: "4px 10px",
+          borderRadius: "999px",
+          fontSize: "14px"
+        }}
+      >
+        {env.name}
+      </span>
+    ))}
+</div>
             </div>
           ))}
         </div>
@@ -180,6 +291,27 @@ const loadFlags = async () => {
     <h2>
       Selected Project: {selectedProject.name}
     </h2>
+    <h3>Environments</h3>
+
+{environments
+  .filter(
+    (env) =>
+      env.projectId ===
+      selectedProject.id
+  )
+  .map((env) => (
+    <div
+      key={env.id}
+      style={{
+        padding: "10px",
+        border: "1px solid #eee",
+        borderRadius: "8px",
+        marginBottom: "10px"
+      }}
+    >
+      {env.name}
+    </div>
+  ))}
     <p>
       Project ID: {selectedProject.id}
     </p>
@@ -227,5 +359,4 @@ const loadFlags = async () => {
     </div>
   )
 }
-
 export default Projects

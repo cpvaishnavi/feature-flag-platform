@@ -29,10 +29,15 @@ exports.createFlag = async (req, res) => {
 exports.getFlags = async (req, res) => {
   try {
     const flags = await prisma.featureFlag.findMany({
-      include: {
-        project: true
-      }
-    })
+  where: {
+    project: {
+      ownerId: req.user.userId
+    }
+  },
+  include: {
+    project: true
+  }
+})
 
     res.json(flags)
   } catch (error) {

@@ -1,4 +1,4 @@
-const BASE_URL = "https://feature-flag-platform.onrender.com"
+const BASE_URL = "https://feature-flag-platform.onrender.com";
 
 export const getFlags = async (token) => {
   const res = await fetch(`${BASE_URL}/flags`, {
@@ -55,21 +55,30 @@ export const signupUser = async (data) => {
   return res.json()
 }
 
-export const getProjects = async () => {
+export const getProjects = async (token) => {
   const res = await fetch(
-    `${BASE_URL}/projects`
+    `${BASE_URL}/projects`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
   )
 
   return res.json()
 }
 
-export const createProject = async (data) => {
+export const createProject = async (
+  token,
+  data
+) => {
   const res = await fetch(
     `${BASE_URL}/projects`,
     {
       method: "POST",
       headers: {
-        "Content-Type": "application/json"
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
       },
       body: JSON.stringify(data)
     }
@@ -77,3 +86,29 @@ export const createProject = async (data) => {
 
   return res.json()
 }
+
+export const getEnvironments =
+  async () => {
+    const res = await fetch(
+      `${BASE_URL}/environments`
+    )
+
+    return res.json()
+  }
+
+export const createEnvironment =
+  async (data) => {
+    const res = await fetch(
+      `${BASE_URL}/environments`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":
+            "application/json"
+        },
+        body: JSON.stringify(data)
+      }
+    )
+
+    return res.json()
+  }
