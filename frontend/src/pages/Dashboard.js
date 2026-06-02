@@ -5,6 +5,7 @@ import MetricCard from "../components/MetricCard"
 function Dashboard({
   onLogout,
   flags,
+  projects,
   name,
   rollout,
   setName,
@@ -65,23 +66,35 @@ function Dashboard({
             />
 
             <MetricCard
-              title="Projects"
-              value={flags.length}
-            />
+  title="Total Flags"
+  value={flags.length}
+/>
 
             <MetricCard
-              title="Average Rollout"
-              value={
-                flags.length
-                  ? Math.round(
-                      flags.reduce(
-                        (sum, flag) => sum + flag.rollout,
-                        0
-                      ) / flags.length
-                    ) + "%"
-                  : "0%"
-              }
-            />
+  title="Average Rollout"
+  value={
+    flags.filter(
+      (flag) => flag.isActive
+    ).length
+      ? Math.round(
+          flags
+            .filter(
+              (flag) =>
+                flag.isActive
+            )
+            .reduce(
+              (sum, flag) =>
+                sum + flag.rollout,
+              0
+            ) /
+            flags.filter(
+              (flag) =>
+                flag.isActive
+            ).length
+        ) + "%"
+      : "0%"
+  }
+/>
           </div>
 
           {/* Create Feature Card */}

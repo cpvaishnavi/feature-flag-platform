@@ -1,4 +1,4 @@
-const BASE_URL = "https://feature-flag-platform.onrender.com";
+const BASE_URL = "http://localhost:3000";
 
 export const getFlags = async (token) => {
   const res = await fetch(`${BASE_URL}/flags`, {
