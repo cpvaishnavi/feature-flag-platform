@@ -299,8 +299,7 @@ const loadFlags = async () => {
     }}
   >
     <h2>
-  Selected Project:
-  {selectedProject.name}
+  Selected Project: {selectedProject.name}
 </h2>
     <h3>Environments</h3>
 

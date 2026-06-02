@@ -9,7 +9,7 @@ function Sidebar({ page, setPage }) {
         padding: "20px",
       }}
     >
-      <h2>Feature Control</h2>
+      <h1>Feature Flag Platform</h1>
 
       <div style={{ marginTop: "30px" }}>
         <p
@@ -28,10 +28,10 @@ function Sidebar({ page, setPage }) {
 >
   Projects
 </p>
-        <p>Features</p>
-        <p>Analytics</p>
-        <p>Audit Logs</p>
-        <p>Settings</p>
+        <p>Features </p>
+        <p>Analytics (Coming Soon)</p>
+        <p>Audit Logs (Coming Soon)</p>
+        <p>Settings (Coming Soon)</p>
       </div>
     </div>
   )
