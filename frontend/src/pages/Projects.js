@@ -89,7 +89,13 @@ const loadFlags = async () => {
             marginTop: "20px"
           }}
         >
-          <h2>Create Project</h2>
+          <h2
+  style={{
+    marginBottom: "20px"
+  }}
+>
+  🚀 Create Project
+</h2>
 
           <div
             style={{
@@ -143,7 +149,14 @@ const loadFlags = async () => {
               Create Project
             </button>
           </div>
-          <h2>Create Environment</h2>
+          <h2
+  style={{
+    marginTop: "40px",
+    marginBottom: "20px"
+  }}
+>
+  🌍 Create Environment
+</h2>
 
 <div
   style={{
@@ -170,10 +183,7 @@ const loadFlags = async () => {
 
   <button
     onClick={async () => {
-  alert(
-    `Project: ${selectedProject?.name}
-Environment: ${environmentName}`
-  )
+  
 
   if (
     !selectedProject ||
@@ -289,8 +299,9 @@ Environment: ${environmentName}`
     }}
   >
     <h2>
-      Selected Project: {selectedProject.name}
-    </h2>
+  Selected Project:
+  {selectedProject.name}
+</h2>
     <h3>Environments</h3>
 
 {environments
@@ -303,23 +314,18 @@ Environment: ${environmentName}`
     <div
       key={env.id}
       style={{
-        padding: "10px",
-        border: "1px solid #eee",
-        borderRadius: "8px",
-        marginBottom: "10px"
+        background: "#f9fafb",
+        border: "1px solid #e5e7eb",
+        padding: "14px",
+        borderRadius: "10px",
+        marginBottom: "10px",
+        fontWeight: "500"
       }}
     >
-      {env.name}
+      🌍 {env.name}
     </div>
   ))}
-    <p>
-      Project ID: {selectedProject.id}
-    </p>
-    <p>
-      Global Selected Project ID:
-      {" "}
-      {selectedProjectId}
-    </p>
+   
     <h3>Feature Flags</h3>
 
 <div
@@ -342,13 +348,60 @@ Environment: ${environmentName}`
     <div
       key={flag.id}
       style={{
-        padding: "12px",
-        border: "1px solid #eee",
-        borderRadius: "8px",
-        marginBottom: "10px"
+        display: "flex",
+        justifyContent:
+          "space-between",
+        alignItems: "center",
+        padding: "14px",
+        border:
+          "1px solid #e5e7eb",
+        borderRadius: "10px",
+        marginBottom: "12px",
+        background: "white"
       }}
     >
-      {flag.name}
+      <div>
+        <div
+          style={{
+            fontWeight: "600"
+          }}
+        >
+          {flag.name}
+        </div>
+
+        <div
+          style={{
+            fontSize: "12px",
+            color: "#6b7280",
+            marginTop: "4px"
+          }}
+        >
+          Rollout: {flag.rollout}%
+        </div>
+      </div>
+
+      <span
+        style={{
+          background:
+            flag.isActive
+              ? "#dcfce7"
+              : "#fee2e2",
+          color:
+            flag.isActive
+              ? "#166534"
+              : "#991b1b",
+          padding:
+            "4px 10px",
+          borderRadius:
+            "999px",
+          fontSize: "12px",
+          fontWeight: "500"
+        }}
+      >
+        {flag.isActive
+          ? "Active"
+          : "Inactive"}
+      </span>
     </div>
   ))}
 </div>
