@@ -7,7 +7,6 @@ import Projects from "./pages/Projects"
 
 function App() {
   const [flags, setFlags] = useState([])
-  const [projects, setProjects] = useState([])
   const [name, setName] = useState("")
   const [rollout, setRollout] = useState(0)
   const [token, setToken] = useState("")
@@ -106,7 +105,6 @@ return (
   <Dashboard
     onLogout={handleLogout}
     flags={flags}
-    projects={projects}
     name={name}
     rollout={rollout}
     setName={setName}

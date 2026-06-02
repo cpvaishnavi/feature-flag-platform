@@ -5,7 +5,6 @@ import MetricCard from "../components/MetricCard"
 function Dashboard({
   onLogout,
   flags,
-  projects,
   name,
   rollout,
   setName,
