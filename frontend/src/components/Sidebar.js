@@ -28,7 +28,7 @@ function Sidebar({ page, setPage }) {
 >
   Projects
 </p>
-        <p>Features </p>
+        <p>Features  (Coming Soon)</p>
         <p>Analytics (Coming Soon)</p>
         <p>Audit Logs (Coming Soon)</p>
         <p>Settings (Coming Soon)</p>
